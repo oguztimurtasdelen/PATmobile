@@ -1,38 +1,16 @@
-
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import {StyleSheet, View} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {MyTabs} from './src/components/MyTabs';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-import Login from './src/components/Login';
-
-export default class App extends React.Component{
-  render(){
-    return(
-      <View style={styles.container}>
-        <Text>Hello World</Text>
-        <Login></Login>
-        
-      </View>
-    )
-  }
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
+  );
 }
-/*
-Comment Line for GitHub push
-*/
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -41,6 +19,6 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: '#002A1C',
     paddingLeft: 50,
-    paddingRight: 50
+    paddingRight: 50,
   },
-})
+});
