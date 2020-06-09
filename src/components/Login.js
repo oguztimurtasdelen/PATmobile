@@ -5,19 +5,78 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 
+async function getPlayersFromApi() {
+  /*return fetch('http://192.168.1.183:3000/api/players')
+    .then(response => response.json())
+    .then(json => {
+      return json;
+    })
+    .catch(error => {
+      console.error(error);
+    });*/
+  const response = await fetch('http://192.168.1.183:3000/api/players');
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
 class Login extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      id: '',
+      found: false,
+    };
+    this.onPressHandler = this.onPressHandler.bind(this);
+  }
+
+  async onPressHandler() {
+    this.setState({
+      found: false,
+    });
+    console.log('onpress');
+    let response = '';
+    //Check if screen is player screen
+    if (this.props.page == 'player') {
+      response = await fetch('http://192.168.1.183:3000/api/players');
+    }
+    //Check if screen is coach screen
+    if (this.props.page == 'coach') {
+      response = await fetch('http://192.168.1.183:3000/api/coachs');
+    }
+    const data = await response.json();
+    data.forEach(element => {
+      console.log(element.ID);
+      if (this.state.id == element.ID) {
+        this.setState({
+          found: true,
+        });
+      }
+    });
+    if (this.state.found) {
+      console.log('found');
+      Alert.alert('FOUND');
+    } else {
+      Alert.alert('NOT FOUND ERROR');
+    }
+  }
+
   render() {
     return (
       <View style={styles.desing}>
         <TextInput
           style={styles.inputDesign}
           placeholder="Enter ID"
-          placeholderTextColor="white"
+          placeholderTextColor="gray"
           underlineColorAndroid={'transparent'}
+          onChangeText={id => this.setState({id})}
+          value={this.state.id}
         />
-        <TouchableOpacity style={styles.buttonDesign}>
+        <TouchableOpacity
+          style={styles.buttonDesign}
+          onPress={this.onPressHandler}>
           <Text style={styles.buttonTextDesign}>LOGIN</Text>
         </TouchableOpacity>
       </View>
@@ -32,20 +91,24 @@ const styles = StyleSheet.create({
   },
 
   inputDesign: {
-    alignSelf: 'stretch',
+    // alignSelf: 'stretch',
     height: 40,
-    marginBottom: 10,
+    width: '50%',
+    margin: 15,
     paddingLeft: 10,
     fontSize: 18,
     color: 'black',
-    backgroundColor: 'black',
-    borderBottomColor: 'white',
+    backgroundColor: 'white',
+    borderBottomColor: 'black',
+    borderRadius: 15,
     borderBottomWidth: 3,
   },
   buttonDesign: {
-    alignSelf: 'stretch',
+    //alignSelf: 'stretch',
     alignItems: 'center',
+    width: '50%',
     padding: 10,
+    margin: 15,
     borderRadius: 50,
     backgroundColor: '#00D367',
   },

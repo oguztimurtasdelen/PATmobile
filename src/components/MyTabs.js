@@ -8,24 +8,24 @@ const Tab = createMaterialTopTabNavigator();
 function MyTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Player" component={HomeScreen} />
-      <Tab.Screen name="Coach" component={SettingsScreen} />
+      <Tab.Screen name="Player" component={PlayerScreen} />
+      <Tab.Screen name="Coach" component={CoachScreen} />
     </Tab.Navigator>
   );
 }
 
-function HomeScreen() {
+function PlayerScreen() {
   return (
     <View style={styles.screen}>
-      <Login />
+      <Login page="player" />
     </View>
   );
 }
 
-function SettingsScreen() {
+function CoachScreen() {
   return (
     <View style={styles.screen}>
-      <Login />
+      <Login page="coach" />
     </View>
   );
 }
