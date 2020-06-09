@@ -8,20 +8,6 @@ import {
   Alert,
 } from 'react-native';
 
-async function getPlayersFromApi() {
-  /*return fetch('http://192.168.1.183:3000/api/players')
-    .then(response => response.json())
-    .then(json => {
-      return json;
-    })
-    .catch(error => {
-      console.error(error);
-    });*/
-  const response = await fetch('http://192.168.1.183:3000/api/players');
-  const data = await response.json();
-  console.log(data);
-  return data;
-}
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -56,8 +42,16 @@ class Login extends React.Component {
       }
     });
     if (this.state.found) {
-      console.log('found');
       Alert.alert('FOUND');
+      if (this.props.page == 'player') {
+        this.props.navigation.navigate('Player', {
+          playerId: this.state.id,
+        });
+      } else if (this.props.page == 'coach') {
+        this.props.navigation.navigate('Coach', {
+          coachId: this.state.id,
+        });
+      }
     } else {
       Alert.alert('NOT FOUND ERROR');
     }
