@@ -9,9 +9,9 @@ const client = new MongoClient(uri, {useNewUrlParser: true});
 
 client.connect(err => {
   console.log('Connected mongo');
-  const collection = client.db('test').collection('playerTable');
+  const collection = client.db('test').collection('historyTable');
   // perform actions on the collection object
-  router.get('/players', function(req, res, next) {
+  router.get('/historyTable', function(req, res, next) {
     collection.find({}).toArray(function(error, result) {
       if (error) {
         console.log('not found error');
@@ -22,4 +22,5 @@ client.connect(err => {
     });
   });
 });
+
 module.exports = router;

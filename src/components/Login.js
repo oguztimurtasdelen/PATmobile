@@ -13,6 +13,7 @@ class Login extends React.Component {
     super(props);
     this.state = {
       id: '',
+      name: '',
       found: false,
     };
     this.onPressHandler = this.onPressHandler.bind(this);
@@ -38,6 +39,7 @@ class Login extends React.Component {
       if (this.state.id == element.ID) {
         this.setState({
           found: true,
+          name: element.Name,
         });
       }
     });
@@ -46,10 +48,12 @@ class Login extends React.Component {
       if (this.props.page == 'player') {
         this.props.navigation.navigate('Player', {
           playerId: this.state.id,
+          playerName: this.state.name,
         });
       } else if (this.props.page == 'coach') {
         this.props.navigation.navigate('Coach', {
           coachId: this.state.id,
+          coachName: this.state.name,
         });
       }
     } else {

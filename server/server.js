@@ -5,6 +5,8 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var players = require('./routes/players');
 var coachs = require('./routes/coachs');
+var trainings = require('./routes/trainings');
+var historyTable = require('./routes/historyTable');
 
 var app = express();
 
@@ -30,3 +32,5 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', index);
 app.use('/api', players);
 app.use('/api', coachs);
+app.use('/api', trainings);
+app.use('/api', historyTable);
