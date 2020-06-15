@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, Alert} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {BarChart} from 'react-native-chart-kit';
@@ -57,15 +57,21 @@ function PlayerStatisticsScreen({route, navigation}) {
   const {trainingData} = route.params;
   const {percentangePlayer} = route.params;
   const {percentangeTeam} = route.params;
-  var firstData;
-  var seceondData;
-  //if it is only playerIndivudial data our props will be trainingData
+  const {playerName} = route.params;
+  var labelName1 = playerName;
+  var labelName2 = 'TEAM';
+  var firstData = 0;
+  var seceondData = 0;
+  //if it is only playerIndivudial data, our props will be trainingData
   if (trainingData) {
-    var firstData = trainingData[0].toString();
-    var seceondData = trainingData[1].toString();
+    labelName1 = 'SUCCESSFUL TOUCHES';
+    labelName2 = 'TOTAL ATTEMPTS';
+    firstData = trainingData[0].toString();
+    seceondData = trainingData[1].toString();
   }
   //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
   else if (percentangePlayer && percentangeTeam) {
+    labelName1 = labelName1.toUpperCase();
     firstData = percentangePlayer;
     seceondData = percentangeTeam;
   }
@@ -74,13 +80,14 @@ function PlayerStatisticsScreen({route, navigation}) {
     <View style={styles.screen}>
       <BarChart
         data={{
-          labels: ['Successful Touches', 'Total Attempts'],
+          labels: [labelName1, labelName2],
           datasets: [
             {
               data: [firstData, seceondData],
             },
           ],
         }}
+        showValuesOnTopOfBars={true}
         fromZero={true}
         width={Dimensions.get('window').width - 16}
         height={Dimensions.get('window').height - 160}
@@ -88,7 +95,7 @@ function PlayerStatisticsScreen({route, navigation}) {
           backgroundColor: '#1cc910',
           backgroundGradientFrom: '#eff3ff',
           backgroundGradientTo: '#efefef',
-          //decimalPlaces: 2,
+          decimalPlaces: 2,
           color: (opacity = 1) => `rgba(3, 32, 252, ${opacity})`,
           style: {
             borderRadius: 16,
