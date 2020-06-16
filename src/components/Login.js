@@ -17,6 +17,7 @@ class Login extends React.Component {
       found: false,
     };
     this.onPressHandler = this.onPressHandler.bind(this);
+    this.getPlayersOfCoach = this.getPlayersOfCoach.bind(this);
   }
 
   async onPressHandler() {
@@ -32,6 +33,7 @@ class Login extends React.Component {
     //Check if screen is coach screen
     if (this.props.page == 'coach') {
       response = await fetch('http://192.168.1.183:3000/api/coachs');
+      var playersOfCoach = await this.getPlayersOfCoach();
     }
     const data = await response.json();
     data.forEach(element => {
@@ -54,11 +56,24 @@ class Login extends React.Component {
         this.props.navigation.navigate('Coach', {
           coachId: this.state.id,
           coachName: this.state.name,
+          players: playersOfCoach,
         });
       }
     } else {
       Alert.alert('NOT FOUND ERROR');
     }
+  }
+
+  async getPlayersOfCoach() {
+    var playersList = [{playerID: '0', playerName: 'SELECT A PLAYER'}];
+    const response = await fetch('http://192.168.1.183:3000/api/players');
+    const data = await response.json();
+    data.forEach(element => {
+      if (element.CoachID == this.state.id) {
+        playersList.push({playerID: element.ID, playerName: element.Name});
+      }
+    });
+    return playersList;
   }
 
   render() {

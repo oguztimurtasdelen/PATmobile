@@ -1,12 +1,35 @@
 import React from 'react';
-import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
+import {Picker} from '@react-native-community/picker';
 
 class CoachOptions extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      chosenPlayer: '0',
+    };
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.playerPicker}>
-          <Text>Player Picker</Text>
+        <View style={styles.playerPickerView}>
+          <Picker
+            style={styles.picker}
+            selectedValue={this.state.chosenPlayer}
+            onValueChange={itemValue =>
+              this.setState({chosenPlayer: itemValue})
+            }>
+            {this.props.players.map(player => {
+              console.log(player.playerName);
+              return (
+                <Picker.Item
+                  label={player.playerName}
+                  value={player.playerID}
+                />
+              );
+            })}
+          </Picker>
         </View>
         <View style={styles.playerOperations}>
           <Text>button 1</Text>
@@ -32,12 +55,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  playerPicker: {
+  playerPickerView: {
     flex: 0.2,
-    alignSelf: 'stretch',
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red',
+    alignItems: 'center',
+  },
+  picker: {
+    flex: 1,
+    width: 200,
   },
   playerOperations: {
     flex: 0.3,

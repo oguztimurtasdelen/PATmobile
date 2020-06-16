@@ -46,9 +46,16 @@ function PlayerScreen({route, navigation}) {
 
 function CoachScreen({route, navigation}) {
   const {coachId} = route.params;
+  const {coachName} = route.params;
+  const {players} = route.params;
   return (
     <View style={styles.screen}>
-      <CoachOptions />
+      <CoachOptions
+        id={coachId}
+        navigation={navigation}
+        name={coachName}
+        players={players}
+      />
     </View>
   );
 }
