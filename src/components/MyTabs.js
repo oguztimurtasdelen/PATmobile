@@ -73,8 +73,8 @@ function PlayerStatisticsScreen({route, navigation}) {
   if (trainingData) {
     labelName1 = 'SUCCESSFUL TOUCHES';
     labelName2 = 'TOTAL ATTEMPTS';
-    firstData = trainingData[0].toString();
-    seceondData = trainingData[1].toString();
+    firstData = trainingData[0];
+    seceondData = trainingData[1];
   }
   //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
   else if (percentangePlayer && percentangeTeam) {
@@ -113,9 +113,53 @@ function PlayerStatisticsScreen({route, navigation}) {
   );
 }
 function CoachStatisticsScreen({route, navigation}) {
+  const {trainingData} = route.params;
+  const {playerID} = route.params;
+  const {percentangePlayer} = route.params;
+  const {percentangeTeam} = route.params;
+  var labelName1 = 'PLAYER';
+  var labelName2 = 'TEAM';
+  var firstData = 0;
+  var seceondData = 0;
+  //if it is only playerIndivudial data, our props will be trainingData
+  if (trainingData) {
+    labelName1 = 'SUCCESSFUL TOUCHES';
+    labelName2 = 'TOTAL ATTEMPTS';
+    firstData = trainingData[0].toString();
+    seceondData = trainingData[1].toString();
+  }
+  //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
+  else if (percentangePlayer && percentangeTeam) {
+    firstData = percentangePlayer;
+    seceondData = percentangeTeam;
+  }
   return (
     <View style={styles.screen}>
-      <Text>STATICTS</Text>
+      <Text style={styles.text}>{playerID}</Text>
+      <BarChart
+        data={{
+          labels: [labelName1, labelName2],
+          datasets: [
+            {
+              data: [firstData, seceondData],
+            },
+          ],
+        }}
+        showValuesOnTopOfBars={true}
+        fromZero={true}
+        width={Dimensions.get('window').width - 16}
+        height={Dimensions.get('window').height - 200}
+        chartConfig={{
+          backgroundColor: '#1cc910',
+          backgroundGradientFrom: '#eff3ff',
+          backgroundGradientTo: '#efefef',
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(3, 32, 252, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+        }}
+      />
     </View>
   );
 }
@@ -143,7 +187,7 @@ function CoachStackScreen() {
       <CoachStack.Screen name="CoachLogin" component={CoachLogin} />
       <CoachStack.Screen name="Coach" component={CoachScreen} />
       <CoachStack.Screen
-        name="CoachStatisticsScreen"
+        name="CoachStatistics"
         component={CoachStatisticsScreen}
       />
     </CoachStack.Navigator>
@@ -156,6 +200,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#d2e3d8',
+  },
+  text: {
+    fontSize: 24,
+    textAlign: 'center',
+    color: '#fa6116',
+    fontWeight: 'bold',
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textTransform: 'uppercase',
+    margin: 8,
+    textDecorationStyle: 'solid',
   },
 });
 

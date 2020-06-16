@@ -65,7 +65,7 @@ class Login extends React.Component {
   }
 
   async getPlayersOfCoach() {
-    var playersList = [{playerID: '0', playerName: 'SELECT A PLAYER'}];
+    var playersList = [{playerID: '', playerName: 'SELECT A PLAYER'}];
     const response = await fetch('http://192.168.1.183:3000/api/players');
     const data = await response.json();
     data.forEach(element => {
