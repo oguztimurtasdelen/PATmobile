@@ -37,9 +37,15 @@ function CoachLogin({navigation}) {
 function PlayerScreen({route, navigation}) {
   const {playerId} = route.params;
   const {playerName} = route.params;
+  const {teamMates} = route.params;
   return (
     <View style={styles.screen}>
-      <PlayerOptions id={playerId} navigation={navigation} name={playerName} />
+      <PlayerOptions
+        id={playerId}
+        navigation={navigation}
+        name={playerName}
+        teamMates={teamMates}
+      />
     </View>
   );
 }
@@ -69,73 +75,28 @@ function PlayerStatisticsScreen({route, navigation}) {
   var labelName2 = 'TEAM';
   var firstData = 0;
   var seceondData = 0;
+  var percentangeIndivudial = 0;
   //if it is only playerIndivudial data, our props will be trainingData
   if (trainingData) {
     labelName1 = 'SUCCESSFUL TOUCHES';
     labelName2 = 'TOTAL ATTEMPTS';
     firstData = trainingData[0];
     seceondData = trainingData[1];
+    percentangeIndivudial = (
+      (firstData / parseFloat(seceondData)) *
+      100
+    ).toFixed(2);
   }
   //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
-  else if (percentangePlayer && percentangeTeam) {
+  else if (percentangePlayer || percentangeTeam) {
     labelName1 = labelName1.toUpperCase();
     firstData = percentangePlayer;
     seceondData = percentangeTeam;
+    percentangeIndivudial = firstData.toFixed(2);
   }
 
   return (
     <View style={styles.screen}>
-      <BarChart
-        data={{
-          labels: [labelName1, labelName2],
-          datasets: [
-            {
-              data: [firstData, seceondData],
-            },
-          ],
-        }}
-        showValuesOnTopOfBars={true}
-        fromZero={true}
-        width={Dimensions.get('window').width - 16}
-        height={Dimensions.get('window').height - 160}
-        chartConfig={{
-          backgroundColor: '#1cc910',
-          backgroundGradientFrom: '#eff3ff',
-          backgroundGradientTo: '#efefef',
-          decimalPlaces: 2,
-          color: (opacity = 1) => `rgba(3, 32, 252, ${opacity})`,
-          style: {
-            borderRadius: 16,
-          },
-        }}
-      />
-    </View>
-  );
-}
-function CoachStatisticsScreen({route, navigation}) {
-  const {trainingData} = route.params;
-  const {playerID} = route.params;
-  const {percentangePlayer} = route.params;
-  const {percentangeTeam} = route.params;
-  var labelName1 = 'PLAYER';
-  var labelName2 = 'TEAM';
-  var firstData = 0;
-  var seceondData = 0;
-  //if it is only playerIndivudial data, our props will be trainingData
-  if (trainingData) {
-    labelName1 = 'SUCCESSFUL TOUCHES';
-    labelName2 = 'TOTAL ATTEMPTS';
-    firstData = trainingData[0].toString();
-    seceondData = trainingData[1].toString();
-  }
-  //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
-  else if (percentangePlayer && percentangeTeam) {
-    firstData = percentangePlayer;
-    seceondData = percentangeTeam;
-  }
-  return (
-    <View style={styles.screen}>
-      <Text style={styles.text}>{playerID}</Text>
       <BarChart
         data={{
           labels: [labelName1, labelName2],
@@ -160,6 +121,69 @@ function CoachStatisticsScreen({route, navigation}) {
           },
         }}
       />
+      <Text style={styles.text}>
+        PLAYER SUCCESS RATE: {percentangeIndivudial}%
+      </Text>
+    </View>
+  );
+}
+function CoachStatisticsScreen({route, navigation}) {
+  const {trainingData} = route.params;
+  const {playerID} = route.params;
+  const {percentangePlayer} = route.params;
+  const {percentangeTeam} = route.params;
+  var labelName1 = 'PLAYER';
+  var labelName2 = 'TEAM';
+  var firstData = 0;
+  var seceondData = 0;
+  var percentangeIndivudial = 0;
+  //if it is only playerIndivudial data, our props will be trainingData
+  if (trainingData) {
+    labelName1 = 'SUCCESSFUL TOUCHES';
+    labelName2 = 'TOTAL ATTEMPTS';
+    firstData = trainingData[0].toString();
+    seceondData = trainingData[1].toString();
+    percentangeIndivudial = (
+      (firstData / parseFloat(seceondData)) *
+      100
+    ).toFixed(2);
+  }
+  //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
+  else if (percentangePlayer || percentangeTeam) {
+    firstData = percentangePlayer;
+    seceondData = percentangeTeam;
+    percentangeIndivudial = firstData.toFixed(2);
+  }
+  return (
+    <View style={styles.screen}>
+      <Text style={styles.text}>{playerID}</Text>
+      <BarChart
+        data={{
+          labels: [labelName1, labelName2],
+          datasets: [
+            {
+              data: [firstData, seceondData],
+            },
+          ],
+        }}
+        showValuesOnTopOfBars={true}
+        fromZero={true}
+        width={Dimensions.get('window').width - 16}
+        height={Dimensions.get('window').height - 220}
+        chartConfig={{
+          backgroundColor: '#1cc910',
+          backgroundGradientFrom: '#eff3ff',
+          backgroundGradientTo: '#efefef',
+          decimalPlaces: 2,
+          color: (opacity = 1) => `rgba(3, 32, 252, ${opacity})`,
+          style: {
+            borderRadius: 16,
+          },
+        }}
+      />
+      <Text style={styles.text}>
+        PLAYER SUCCESS RATE: {percentangeIndivudial}%
+      </Text>
     </View>
   );
 }
@@ -202,7 +226,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#d2e3d8',
   },
   text: {
-    fontSize: 24,
+    fontSize: 23,
     textAlign: 'center',
     color: '#fa6116',
     fontWeight: 'bold',
@@ -210,7 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textTransform: 'uppercase',
-    margin: 8,
+    margin: 5,
     textDecorationStyle: 'solid',
   },
 });

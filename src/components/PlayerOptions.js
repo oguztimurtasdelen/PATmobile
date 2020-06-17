@@ -23,6 +23,7 @@ class PlayerOptions extends React.Component {
     this.getPercentangeAccuracyPlayer = this.getPercentangeAccuracyPlayer.bind(
       this,
     );
+    this.getTeamMatesTrainings = this.getTeamMatesTrainings.bind(this);
     //#endregion
   }
   //Sending indivudial speed training data of player to statictics screen
@@ -170,14 +171,19 @@ class PlayerOptions extends React.Component {
     var numberOfSuccesTouches = 0;
     const response = await fetch('http://192.168.1.183:3000/api/trainings');
     const data = await response.json();
+    const teamMatesTrainings = await this.getTeamMatesTrainings();
     data.forEach(element => {
       //Check if training type is speed training
       if (element.trainingID.startsWith('A')) {
-        accuracyTrainingTouches++;
-        //finding successful touches for all team
-        if (element.isSucces == '1') {
-          numberOfSuccesTouches++;
-        }
+        teamMatesTrainings.forEach(training => {
+          if (training == element.trainingID) {
+            accuracyTrainingTouches++;
+            //finding successful touches for all team
+            if (element.isSucces == '1') {
+              numberOfSuccesTouches++;
+            }
+          }
+        });
       }
     });
     //avoiding dividing 0 exception
@@ -191,20 +197,39 @@ class PlayerOptions extends React.Component {
       return 0;
     }
   }
+
+  async getTeamMatesTrainings() {
+    let teamMatesTrainings = [];
+    const response = await fetch('http://192.168.1.183:3000/api/historyTable');
+    const historyTable = await response.json();
+    this.props.teamMates.forEach(element => {
+      historyTable.forEach(history => {
+        if (history.playerID == element) {
+          teamMatesTrainings.push(history.trainingID);
+        }
+      });
+    });
+    return teamMatesTrainings;
+  }
   //Get percentange of succes touches in speed training for all team
   async getPercentangeSpeedAllTeam() {
     var speedTrainingTouches = 0;
     var numberOfSuccesTouches = 0;
     const response = await fetch('http://192.168.1.183:3000/api/trainings');
     const data = await response.json();
+    const teamMatesTrainings = await this.getTeamMatesTrainings();
     data.forEach(element => {
       //Check if training type is speed training
       if (element.trainingID.startsWith('S')) {
-        speedTrainingTouches++;
-        //finding successful touches for all team
-        if (element.isSucces == '1') {
-          numberOfSuccesTouches++;
-        }
+        teamMatesTrainings.forEach(training => {
+          if (training == element.trainingID) {
+            speedTrainingTouches++;
+            //finding successful touches for all team
+            if (element.isSucces == '1') {
+              numberOfSuccesTouches++;
+            }
+          }
+        });
       }
     });
     //avoiding dividing 0 exception

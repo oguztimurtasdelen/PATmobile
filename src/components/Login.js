@@ -18,6 +18,7 @@ class Login extends React.Component {
     };
     this.onPressHandler = this.onPressHandler.bind(this);
     this.getPlayersOfCoach = this.getPlayersOfCoach.bind(this);
+    this.getTeamMates = this.getTeamMates.bind(this);
   }
 
   async onPressHandler() {
@@ -36,6 +37,9 @@ class Login extends React.Component {
       var playersOfCoach = await this.getPlayersOfCoach();
     }
     const data = await response.json();
+    if (this.props.page == 'player') {
+      var teamMates = await this.getTeamMates(data);
+    }
     data.forEach(element => {
       console.log(element.ID);
       if (this.state.id == element.ID) {
@@ -51,6 +55,7 @@ class Login extends React.Component {
         this.props.navigation.navigate('Player', {
           playerId: this.state.id,
           playerName: this.state.name,
+          teamMates: teamMates,
         });
       } else if (this.props.page == 'coach') {
         this.props.navigation.navigate('Coach', {
@@ -74,6 +79,24 @@ class Login extends React.Component {
       }
     });
     return playersList;
+  }
+
+  async getTeamMates(players) {
+    let coachOfPlayer = '';
+    let teamMates = [];
+    //finding coach of current player
+    for (let i = 0; i < players.length; i++) {
+      if (players[i].ID == this.state.id) {
+        coachOfPlayer = players[i].CoachID;
+        break;
+      }
+    }
+    players.forEach(element => {
+      if (element.CoachID == coachOfPlayer && element.ID != this.state.id) {
+        teamMates.push(element.ID);
+      }
+    });
+    return teamMates;
   }
 
   render() {

@@ -27,6 +27,7 @@ class CoachOptions extends React.Component {
     this.getPercentangeAccuracyPlayer = this.getPercentangeAccuracyPlayer.bind(
       this,
     );
+    this.getTeamMatesTrainings = this.getTeamMatesTrainings.bind(this);
   }
 
   async onPressPlayerSpeed() {
@@ -177,14 +178,19 @@ class CoachOptions extends React.Component {
     var numberOfSuccesTouches = 0;
     const response = await fetch('http://192.168.1.183:3000/api/trainings');
     const data = await response.json();
+    const teamMatesTrainings = await this.getTeamMatesTrainings();
     data.forEach(element => {
       //Check if training type is speed training
       if (element.trainingID.startsWith('A')) {
-        accuracyTrainingTouches++;
-        //finding successful touches for all team
-        if (element.isSucces == '1') {
-          numberOfSuccesTouches++;
-        }
+        teamMatesTrainings.forEach(training => {
+          if (training == element.trainingID) {
+            accuracyTrainingTouches++;
+            //finding successful touches for all team
+            if (element.isSucces == '1') {
+              numberOfSuccesTouches++;
+            }
+          }
+        });
       }
     });
     //avoiding dividing 0 exception
@@ -221,19 +227,41 @@ class CoachOptions extends React.Component {
     }
   }
 
+  async getTeamMatesTrainings() {
+    let teamMatesTrainings = [];
+    const response = await fetch('http://192.168.1.183:3000/api/historyTable');
+    const historyTable = await response.json();
+    this.props.players.forEach(element => {
+      //if it is not chosen player
+      if (element.playerID != this.state.chosenPlayer) {
+        historyTable.forEach(history => {
+          if (history.playerID == element.playerID) {
+            teamMatesTrainings.push(history.trainingID);
+          }
+        });
+      }
+    });
+    return teamMatesTrainings;
+  }
+
   async getPercentangeSpeedAllTeam() {
     var speedTrainingTouches = 0;
     var numberOfSuccesTouches = 0;
     const response = await fetch('http://192.168.1.183:3000/api/trainings');
     const data = await response.json();
+    const teamMatesTrainings = await this.getTeamMatesTrainings();
     data.forEach(element => {
       //Check if training type is speed training
       if (element.trainingID.startsWith('S')) {
-        speedTrainingTouches++;
-        //finding successful touches for all team
-        if (element.isSucces == '1') {
-          numberOfSuccesTouches++;
-        }
+        teamMatesTrainings.forEach(training => {
+          if (training == element.trainingID) {
+            speedTrainingTouches++;
+            //finding successful touches for all team
+            if (element.isSucces == '1') {
+              numberOfSuccesTouches++;
+            }
+          }
+        });
       }
     });
     //avoiding dividing 0 exception
@@ -293,14 +321,7 @@ class CoachOptions extends React.Component {
             <Text style={styles.buttonText}>PLAYERvsTEAM ACCURACY</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.teamOperations}>
-          <TouchableOpacity>
-            <Text>button 5</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>button 6</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.empty} />
       </View>
     );
   }
@@ -313,7 +334,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   playerPickerView: {
-    flex: 0.1,
+    flex: 0.2,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -344,13 +365,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  teamOperations: {
-    flex: 0.3,
+  empty: {
+    flex: 0.2,
     alignSelf: 'stretch',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'purple',
   },
 });
 export {CoachOptions};
