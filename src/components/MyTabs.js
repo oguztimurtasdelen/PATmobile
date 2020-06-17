@@ -82,17 +82,25 @@ function PlayerStatisticsScreen({route, navigation}) {
     labelName2 = 'TOTAL ATTEMPTS';
     firstData = trainingData[0];
     seceondData = trainingData[1];
-    percentangeIndivudial = (
-      (firstData / parseFloat(seceondData)) *
-      100
-    ).toFixed(2);
+    if (firstData == '0') {
+      percentangeIndivudial = 0;
+    } else {
+      percentangeIndivudial = (
+        (firstData / parseFloat(seceondData)) *
+        100
+      ).toFixed(2);
+    }
   }
   //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
   else if (percentangePlayer || percentangeTeam) {
     labelName1 = labelName1.toUpperCase();
     firstData = percentangePlayer;
     seceondData = percentangeTeam;
-    percentangeIndivudial = firstData.toFixed(2);
+    if (firstData == '0') {
+      percentangeIndivudial = 0;
+    } else {
+      percentangeIndivudial = firstData.toFixed(2);
+    }
   }
 
   return (
@@ -141,18 +149,26 @@ function CoachStatisticsScreen({route, navigation}) {
   if (trainingData) {
     labelName1 = 'SUCCESSFUL TOUCHES';
     labelName2 = 'TOTAL ATTEMPTS';
-    firstData = trainingData[0].toString();
-    seceondData = trainingData[1].toString();
-    percentangeIndivudial = (
-      (firstData / parseFloat(seceondData)) *
-      100
-    ).toFixed(2);
+    firstData = trainingData[0];
+    seceondData = trainingData[1];
+    if (firstData == '0') {
+      percentangeIndivudial = 0;
+    } else {
+      percentangeIndivudial = (
+        (firstData / parseFloat(seceondData)) *
+        100
+      ).toFixed(2);
+    }
   }
   //if it is playerVSteam data our props will be percentangePlayer and percentangeTeam
   else if (percentangePlayer || percentangeTeam) {
     firstData = percentangePlayer;
     seceondData = percentangeTeam;
-    percentangeIndivudial = firstData.toFixed(2);
+    if (firstData == '0') {
+      percentangeIndivudial = 0;
+    } else {
+      percentangeIndivudial = firstData.toFixed(2);
+    }
   }
   return (
     <View style={styles.screen}>
