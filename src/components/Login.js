@@ -50,7 +50,6 @@ class Login extends React.Component {
       }
     });
     if (this.state.found) {
-      Alert.alert('FOUND');
       if (this.props.page == 'player') {
         this.props.navigation.navigate('Player', {
           playerId: this.state.id,

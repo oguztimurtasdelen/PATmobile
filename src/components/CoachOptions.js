@@ -290,6 +290,7 @@ class CoachOptions extends React.Component {
               console.log(player.playerName);
               return (
                 <Picker.Item
+                  key={player.playerID}
                   label={player.playerName + ' ' + player.playerID}
                   value={player.playerID}
                 />
