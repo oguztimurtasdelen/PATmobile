@@ -287,7 +287,6 @@ class CoachOptions extends React.Component {
               this.setState({chosenPlayer: itemValue})
             }>
             {this.props.players.map(player => {
-              console.log(player.playerName);
               return (
                 <Picker.Item
                   key={player.playerID}

@@ -8,8 +8,6 @@ import {
   Alert,
 } from 'react-native';
 
-import md5 from 'md5';
-
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -43,10 +41,8 @@ class Login extends React.Component {
       var teamMates = await this.getTeamMates(data);
     }
     data.forEach(element => {
-      if (
-        this.state.id == element.ID &&
-        md5(this.state.password) == element.Password
-      ) {
+      console.log(element.ID);
+      if (this.state.id == element.ID) {
         this.setState({
           found: true,
           name: element.Name,
@@ -68,7 +64,7 @@ class Login extends React.Component {
         });
       }
     } else {
-      Alert.alert('ERROR', 'WRONG ID OR PASSWORD');
+      Alert.alert('NOT FOUND ERROR');
     }
   }
 

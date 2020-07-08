@@ -8,13 +8,11 @@ const uri =
 const client = new MongoClient(uri, {useNewUrlParser: true});
 
 client.connect(err => {
-  console.log('Connected mongo');
   const collection = client.db('test').collection('coachTable');
   // perform actions on the collection object
   router.get('/coachs', function(req, res, next) {
     collection.find({}).toArray(function(error, result) {
       if (error) {
-        console.log('not found error');
         res.send(error);
       }
       res.json(result);

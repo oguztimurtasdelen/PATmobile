@@ -8,7 +8,23 @@ import {
   Alert,
 } from 'react-native';
 
-import md5 from 'md5';
+import {Realm, RemoteMongoClient} from 'realm';
+
+const realmApp = Realm.initializeDefaultAppClient('patmobile-hcfqr');
+const mongodb = realmApp.getServiceClient(
+  RemoteMongoClient.factory,
+  'mongodb-atlas',
+);
+const itemsCollection = mongodb.db('test').collection('playerTable');
+
+const query = {quantity: {$gte: 25}};
+const options = {
+  projection: {
+    title: 1,
+    quantity: 1,
+  },
+  sort: {title: -1},
+};
 
 class Login extends React.Component {
   constructor(props) {
@@ -22,6 +38,20 @@ class Login extends React.Component {
     this.onPressHandler = this.onPressHandler.bind(this);
     this.getPlayersOfCoach = this.getPlayersOfCoach.bind(this);
     this.getTeamMates = this.getTeamMates.bind(this);
+    this.onPressH = this.onPressH.bind(this);
+  }
+
+  onPressH() {
+    itemsCollection
+      .find()
+      .then(result => {
+        if (result) {
+          console.log(`Successfully found document: ${result}.`);
+        } else {
+          console.log('No document matches the provided query.');
+        }
+      })
+      .catch(err => console.error(`Failed to find document: ${err}`));
   }
 
   async onPressHandler() {
@@ -43,10 +73,8 @@ class Login extends React.Component {
       var teamMates = await this.getTeamMates(data);
     }
     data.forEach(element => {
-      if (
-        this.state.id == element.ID &&
-        md5(this.state.password) == element.Password
-      ) {
+      console.log(element.ID);
+      if (this.state.id == element.ID) {
         this.setState({
           found: true,
           name: element.Name,
@@ -68,7 +96,7 @@ class Login extends React.Component {
         });
       }
     } else {
-      Alert.alert('ERROR', 'WRONG ID OR PASSWORD');
+      Alert.alert('NOT FOUND ERROR');
     }
   }
 
@@ -124,7 +152,7 @@ class Login extends React.Component {
         />
         <TouchableOpacity
           style={styles.buttonDesign}
-          onPress={this.onPressHandler}>
+          onPress={this.onPressH}>
           <Text style={styles.buttonTextDesign}>LOGIN</Text>
         </TouchableOpacity>
       </View>

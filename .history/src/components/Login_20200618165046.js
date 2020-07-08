@@ -8,15 +8,12 @@ import {
   Alert,
 } from 'react-native';
 
-import md5 from 'md5';
-
 class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       id: '',
       name: '',
-      password: '',
       found: false,
     };
     this.onPressHandler = this.onPressHandler.bind(this);
@@ -28,6 +25,7 @@ class Login extends React.Component {
     this.setState({
       found: false,
     });
+    console.log('onpress');
     let response = '';
     //Check if screen is player screen
     if (this.props.page == 'player') {
@@ -43,10 +41,8 @@ class Login extends React.Component {
       var teamMates = await this.getTeamMates(data);
     }
     data.forEach(element => {
-      if (
-        this.state.id == element.ID &&
-        md5(this.state.password) == element.Password
-      ) {
+      console.log(element.ID);
+      if (this.state.id == element.ID) {
         this.setState({
           found: true,
           name: element.Name,
@@ -68,7 +64,7 @@ class Login extends React.Component {
         });
       }
     } else {
-      Alert.alert('ERROR', 'WRONG ID OR PASSWORD');
+      Alert.alert('NOT FOUND ERROR');
     }
   }
 
@@ -112,15 +108,6 @@ class Login extends React.Component {
           underlineColorAndroid={'transparent'}
           onChangeText={id => this.setState({id})}
           value={this.state.id}
-        />
-        <TextInput
-          style={styles.inputDesign}
-          placeholder="Enter password"
-          placeholderTextColor="gray"
-          underlineColorAndroid={'transparent'}
-          secureTextEntry={true}
-          onChangeText={password => this.setState({password})}
-          value={this.state.password}
         />
         <TouchableOpacity
           style={styles.buttonDesign}
